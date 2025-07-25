@@ -297,7 +297,7 @@ def pre_hmp(subject_id, resample=True, n_jobs=1):
     # Drop trials where RT_Correct_CorrPU is NaN (wrong and no answer trials)
     meta_data_new = meta_data.dropna(subset=['RT_Correct_CorrPU'])
     epochs_unicity = epochs_unicity[meta_data_new.index]
-    n_wrongAnsers = len(meta_data_new) - len(meta_data)
+    n_wrongAnsers =  len(meta_data) - len(meta_data_new) 
 
     # Remove manually selected noisy trials
     epochs_unicity.drop(bad_trials, reason='noisy(manual inspection)')
