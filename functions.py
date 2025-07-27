@@ -260,7 +260,8 @@ def load_trials_metadata(id):
     trial_metadata = behavior_subjets[behavior_subjets['Sujet'] == subject_key]
     # remove the rows that Ordre is more than 108
     trial_metadata = trial_metadata[trial_metadata['Ordre'] <= 108]
-
+    trial_metadata = trial_metadata.sort_values(by = 'Ordre')
+    trial_metadata.reset_index(drop=True, inplace=True)
     return trial_metadata
 
 
@@ -289,18 +290,25 @@ def pre_hmp(subject_id, resample=True, n_jobs=1):
     raw.notch_filter([50, 100], fir_design='firwin', skip_by_annotation='edge')
     raw.filter(l_freq=1, h_freq= 30)
 
-    # 3. epoch the data
+    # 3. epoch the data and remove bad trials
     meta_data = load_trials_metadata(subject_id)
-    meta_data.reset_index(drop=True, inplace=True)
     epochs_unicity = epoching(subject_id, raw, stim  = 'unicity_point' , tmin = -0.5, tmax = 2, baseline=None,  metadata= meta_data) 
 
-    # Drop trials where RT_Correct_CorrPU is NaN (wrong and no answer trials)
-    meta_data_new = meta_data.dropna(subset=['RT_Correct_CorrPU'])
-    epochs_unicity = epochs_unicity[meta_data_new.index]
-    n_wrongAnsers =  len(meta_data) - len(meta_data_new) 
+    # we get new metadata from the epochs because at epoching step there might be some trials that are automatically dropped because of length for example
+    # so we need to reset the index of the metadata
+    meta_data = epochs_unicity.metadata
+    meta_data= meta_data.reset_index(drop=True)
 
-    # Remove manually selected noisy trials
-    epochs_unicity.drop(bad_trials, reason='noisy(manual inspection)')
+    # bad indices
+    bad_indices = meta_data[meta_data['Ordre'].isin(bad_trials)].index
+    na_indices = meta_data[meta_data['RT_Correct_CorrPU'].isna()].index
+    # Combine bad indices
+    remove_indices = bad_indices.union(na_indices)
+    # Remove trials (manual selected noisy trials and trials with NaN RT_Correct_CorrPU)
+    epochs_unicity.drop(remove_indices)
+
+
+
 
     # 4. remove noisy components
     path_ic = os.path.join(data_dir, f'S{subject_id}_ica_infomax.fif')
@@ -316,6 +324,7 @@ def pre_hmp(subject_id, resample=True, n_jobs=1):
     mat = np.delete(reject_log.labels, reject_log.bad_epochs, axis=0)
     percentage_interp = (mat == 2).sum() / mat.size * 100
 
+
     # interpolate bridged channels
     epochs_ar = mne.preprocessing.interpolate_bridged_electrodes(epochs_ar, bridged_idx, bad_limit=4) 
 
@@ -325,15 +334,15 @@ def pre_hmp(subject_id, resample=True, n_jobs=1):
     epochs_ar.set_eeg_reference(ref_channels='average')
     # save the logs 
     logs = {'n_manually_removed_trials': len(bad_trials),
-            'n_wrong_answers': n_wrongAnsers,
+            'n_wrong_answers': len(na_indices),
             'n_autoreject_removed_trials': int(np.sum(reject_log.bad_epochs)),
             'n_manually_removed_channels': len(bads_channel),
             'n_bridged_channels': len(bridged_ch_names),
             'autoreject_interp_percentage': percentage_interp,}
     
     # save the epochs
-    path_epochs = os.path.join(data_dir, f'S{subject_id}_epochs_preHMP.fif')
-    path_logs = os.path.join(data_dir, f'S{subject_id}_logs_preHMP.pkl')
+    path_epochs = os.path.join(data_dir,'Dnl', f'S{subject_id}_epochs_preHMP.fif')
+    path_logs = os.path.join(data_dir,'Dnl', f'S{subject_id}_logs_preHMP.pkl')
 
     # resample epochs to 256 Hz
     if resample:
