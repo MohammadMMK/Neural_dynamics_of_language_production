@@ -332,6 +332,10 @@ def pre_hmp(subject_id, resample=True, n_jobs=1):
     epochs_ar.interpolate_bads()
     # 6. re-reference to average
     epochs_ar.set_eeg_reference(ref_channels='average')
+
+    # 7. add metadata to epochs
+    epochs_ar.metadata['AoA'] = epochs_ar.events[:, 2]  # Add AoA from events to metadata
+
     # save the logs 
     logs = {'n_manually_removed_trials': len(bad_trials),
             'n_wrong_answers': len(na_indices),
