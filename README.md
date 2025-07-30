@@ -19,7 +19,9 @@ We believe that significant degree of the discrepancies in the field, in particu
 ## Results:
 
 The preliminary results are illustrated for:\
-- fitting HMP model and hyperparameter tunning in [`HMP_fitting_youngGroup.ipynb`](https://github.com/MohammadMMK/Neural_dynamics_of_language_production/blob/main/Hidden%20Multivariate%20Pattern(HMP)/HMP_fitting_youngGroup.ipynb)- HMP event's duration and topographies in [`HMP_visualization_young.ipynb`](https://github.com/MohammadMMK/Neural_dynamics_of_language_production/blob/main/Hidden%20Multivariate%20Pattern(HMP)/HMP_visualization_young.ipynb)- gICA topomaps in [`gICA_youngGroup.ipynb`](https://github.com/MohammadMMK/Neural_dynamics_of_language_production/blob/main/gICA_HMM/gICA_youngGroup.ipynb)
+- fitting HMP model and hyperparameter tunning in [`HMP_fitting_youngGroup.ipynb`](https://github.com/MohammadMMK/Neural_dynamics_of_language_production/blob/main/Hidden%20Multivariate%20Pattern(HMP)/HMP_fitting_youngGroup.ipynb)
+- HMP event's duration and topographies in [`HMP_visualization_young.ipynb`](https://github.com/MohammadMMK/Neural_dynamics_of_language_production/blob/main/Hidden%20Multivariate%20Pattern(HMP)/HMP_visualization_young.ipynb)
+- gICA topomaps in [`gICA_youngGroup.ipynb`](https://github.com/MohammadMMK/Neural_dynamics_of_language_production/blob/main/gICA_HMM/gICA_youngGroup.ipynb)
 
 **More result coming soon ...**
 
