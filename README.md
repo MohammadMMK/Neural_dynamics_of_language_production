@@ -31,4 +31,4 @@ I would like to express my deepest gratitude to Dr. Raphael Fargier for his inva
 
 I am also sincerely thankful to Dr. patricia reynaud-bouret and Dr. samuel deslauriers-gauthier for their advises and constructive feedback, which greatly contributed to shaping the direction and clarity of this work.
 
-This project was initiated during my internship at the Brain, Cognition and Language Lab (BCL), and I am grateful for the collaborative environment and provided resources that made this work possible.
+This project was initiated during my internship at the BCL lab, and I am grateful for the collaborative environment and provided resources that made this work possible.
