@@ -20,11 +20,12 @@ class gICA:
             sfreq = epochs.info['sfreq']
             rt_sample = [int((rt * sfreq) + (-epochs.tmin * sfreq)) for rt in epochs.metadata['RT_Correct_CorrPU'].values]
             data = epochs.get_data()
-            all_data.append(np.concatenate([trial[:, :sample] for trial, sample in zip(data, rt_sample)], axis=1))
+            
+            if zscore_norm:
+                data = zscore(data, axis= (0,2)) 
 
+            all_data.append(np.concatenate([trial[:, :sample] for trial, sample in zip(data, rt_sample)], axis=1))    
         concat_all_data = np.concatenate(all_data, axis=1)
-        if zscore_norm:
-            concat_all_data = zscore(concat_all_data)
         info = mne.io.read_info(paths[0])
         concat_all = mne.io.RawArray(concat_all_data, info)
         return concat_all
